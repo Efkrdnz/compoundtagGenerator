@@ -392,6 +392,8 @@ function App() {
                 node={dataMap}
                 onUpdate={updateNode}
                 onDelete={deleteNode}
+                selectedPath={selectedPath}
+                onSelect={onSelect}
               />
             </div>
           </div>
