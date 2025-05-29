@@ -16,10 +16,13 @@ const DataTypeSelector = ({ value, onChange }) => {
   );
 };
 
-const DataMapNode = ({ node, onUpdate, onDelete, path = [] }) => {
+const DataMapNode = ({ node, onUpdate, onDelete, path = [], selectedPath, onSelect }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [newKey, setNewKey] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  
+  const isSelected = selectedPath && JSON.stringify(selectedPath) === JSON.stringify(path);
+  const currentPath = path.join('.');
 
   const addProperty = () => {
     if (newKey.trim()) {
