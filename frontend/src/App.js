@@ -93,11 +93,17 @@ const DataMapNode = ({ node, onUpdate, onDelete, path = [], selectedPath, onSele
   };
 
   return (
-    <div className="ml-4 border-l-2 border-gray-200 pl-4">
-      <div className="flex items-center py-1">
+    <div className={`ml-4 border-l-2 pl-4 ${isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
+      <div 
+        className={`flex items-center py-1 cursor-pointer rounded px-2 ${isSelected ? 'bg-blue-100' : 'hover:bg-gray-50'}`}
+        onClick={() => onSelect(path)}
+      >
         {node.type === 'object' && (
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
             className="mr-2 text-gray-500 hover:text-gray-700"
           >
             {isExpanded ? '▼' : '▶'}
