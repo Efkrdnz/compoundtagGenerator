@@ -309,6 +309,7 @@ function App() {
   });
   const [dataMapName, setDataMapName] = useState('universal_laws');
   const [forgeVersion, setForgeVersion] = useState('neoforge_1_21_1');
+  const [selectedPath, setSelectedPath] = useState(null);
 
   const updateNode = (path, newNode) => {
     const newDataMap = { ...dataMap };
