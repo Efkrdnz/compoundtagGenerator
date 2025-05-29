@@ -611,7 +611,7 @@ function App() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Data Map Structure</h2>
             <div className="border rounded-lg p-4 max-h-96 overflow-auto">
@@ -635,6 +635,18 @@ function App() {
             <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
               Export Java File
             </button>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Property Access Code</h2>
+            <div className="max-h-96 overflow-auto">
+              <CodeSnippetGenerator 
+                selectedPath={selectedPath}
+                dataMap={dataMap}
+                dataMapName={dataMapName}
+                forgeVersion={forgeVersion}
+              />
+            </div>
           </div>
         </div>
 
