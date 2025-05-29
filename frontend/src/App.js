@@ -302,6 +302,117 @@ ${getEventHandler()}
   );
 };
 
+const CodeSnippetGenerator = ({ selectedPath, dataMap, dataMapName, forgeVersion }) => {
+  if (!selectedPath || selectedPath.length === 0) {
+    return (
+      <div className="bg-gray-100 p-4 rounded text-gray-500 text-center">
+        Click on any property in the data map to generate getter/setter code
+      </div>
+    );
+  }
+
+  const getNodeAtPath = (map, path) => {
+    let current = map;
+    for (const key of path) {
+      if (!current.children || !current.children[key]) return null;
+      current = current.children[key];
+    }
+    return current;
+  };
+
+  const node = getNodeAtPath(dataMap, selectedPath);
+  if (!node) return null;
+
+  const variableName = dataMapName.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
+  const variableAccess = `TestingModVariables.MapVariables.get(world).${variableName}`;
+  
+  const pathString = selectedPath.map(p => `"${p}"`).join(', ');
+  const propertyName = selectedPath[selectedPath.length - 1];
+  
+  // Build getter chain
+  let getterChain = variableAccess;
+  for (let i = 0; i < selectedPath.length - 1; i++) {
+    getterChain += `.getCompound("${selectedPath[i]}")`;
+  }
+  
+  // Build setter chain
+  let setterChain = variableAccess;
+  for (let i = 0; i < selectedPath.length - 1; i++) {
+    setterChain += `.getCompound("${selectedPath[i]}")`;
+  }
+
+  const getJavaType = (type) => {
+    switch (type) {
+      case 'string': return 'String';
+      case 'double': return 'double';
+      case 'boolean': return 'boolean';
+      case 'object': return 'CompoundTag';
+      default: return 'Object';
+    }
+  };
+
+  const getGetterMethod = (type) => {
+    switch (type) {
+      case 'string': return 'getString';
+      case 'double': return 'getDouble';
+      case 'boolean': return 'getBoolean';
+      case 'object': return 'getCompound';
+      default: return 'get';
+    }
+  };
+
+  const getSetterMethod = (type) => {
+    switch (type) {
+      case 'string': return 'putString';
+      case 'double': return 'putDouble';
+      case 'boolean': return 'putBoolean';
+      case 'object': return 'put';
+      default: return 'put';
+    }
+  };
+
+  const getterCode = `${getJavaType(node.type)} ${propertyName.toLowerCase()} = ${getterChain}.${getGetterMethod(node.type)}("${propertyName}");`;
+  
+  const exampleValue = node.type === 'string' ? '"new_value"' : 
+                      node.type === 'boolean' ? 'true' : 
+                      node.type === 'double' ? '1.0' : 'newValue';
+  
+  const setterCode = node.type === 'object' 
+    ? `${setterChain}.put("${propertyName}", new CompoundTag());`
+    : `${setterChain}.${getSetterMethod(node.type)}("${propertyName}", ${exampleValue});`;
+
+  const syncCode = `TestingModVariables.MapVariables.get(world).syncData(world);`;
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-blue-50 border border-blue-200 rounded p-3">
+        <h4 className="font-semibold text-blue-800 mb-2">
+          Selected: {selectedPath.join(' → ')} ({node.type})
+        </h4>
+      </div>
+      
+      <div>
+        <h4 className="font-semibold text-gray-700 mb-2">Get Value:</h4>
+        <div className="bg-gray-900 text-green-400 p-3 rounded font-mono text-sm">
+          <pre>{getterCode}</pre>
+        </div>
+      </div>
+      
+      <div>
+        <h4 className="font-semibold text-gray-700 mb-2">Set Value:</h4>
+        <div className="bg-gray-900 text-green-400 p-3 rounded font-mono text-sm">
+          <pre>{setterCode}</pre>
+          <pre>{syncCode}</pre>
+        </div>
+      </div>
+      
+      <div className="text-xs text-gray-500">
+        <p><strong>Tip:</strong> Remember to call syncData() after modifying values to save changes to the world.</p>
+      </div>
+    </div>
+  );
+};
+
 function App() {
   const [dataMap, setDataMap] = useState({
     type: 'object',
