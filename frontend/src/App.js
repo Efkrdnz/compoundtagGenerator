@@ -293,7 +293,7 @@ ${getEventHandler()}
                 }
         }
 }`;
-  };
+};
 
   return (
     <div className="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm overflow-auto h-96">
