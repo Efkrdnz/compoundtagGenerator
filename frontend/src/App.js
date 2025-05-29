@@ -311,6 +311,10 @@ function App() {
   const [forgeVersion, setForgeVersion] = useState('neoforge_1_21_1');
   const [selectedPath, setSelectedPath] = useState(null);
 
+  const onSelect = (path) => {
+    setSelectedPath(path);
+  };
+
   const updateNode = (path, newNode) => {
     const newDataMap = { ...dataMap };
     let current = newDataMap;
