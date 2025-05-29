@@ -130,6 +130,8 @@ const DataMapNode = ({ node, onUpdate, onDelete, path = [], selectedPath, onSele
               node={child}
               onUpdate={onUpdate}
               onDelete={onDelete}
+              selectedPath={selectedPath}
+              onSelect={onSelect}
               path={[...path, key]}
             />
           ))}
